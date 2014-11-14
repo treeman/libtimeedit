@@ -83,11 +83,14 @@ sort: How to sort information
     -3              Divide in weeks, no date shown
     -2              Divide in weeks
     -1              Rolling schedule
-    1               Rows split in Day/Time
+     1              Rows split in Day/Time
 g: ?
 h2: Meny choice
-    f               No meny
-    otherwise       Meny
+    f (some others) No meny
+    remove          Meny
 
 Simpler:
 https://se.timeedit.net/web/liu/db1/schema/ri.html?sid=4&p=140703-141231&objects=363741.219&so=0&sort=-2
+https://se.timeedit.net/web/liu/db1/schema/ri.txt?sid=3&p=140703-141231&sort=1&objects=363741.219
+https://se.timeedit.net/web/liu/db1/schema/ri.ics?sid=3&p=140703-141231&sort=1&objects=363741.219
+https://se.timeedit.net/web/liu/db1/schema/ri.csv?sid=3&p=140703-141231&sort=1&objects=363741.219
