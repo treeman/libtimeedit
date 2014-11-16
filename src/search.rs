@@ -7,6 +7,11 @@ use schedule::schedule;
 use parse;
 use info::{ Type };
 
+// TODO
+//fn search(string: &str) -> Vec<Type> {
+
+//}
+
 fn course_search(string: &str) -> Vec<Type> {
     type_search(string, 219)
 }
@@ -63,7 +68,7 @@ fn search() {
     let from = time::now();
     let to = time::at(from.to_timespec() + Duration::weeks(1));
 
-    let s = "FYN1";
+    let s = "TATA";
     let courses = course_search(s);
     let groups = group_search(s);
 
@@ -72,20 +77,38 @@ fn search() {
         println!("{}", course);
     }
 
-    println!("Found {} groups matching {}", groups.len(), s);
-    for group in groups.iter() {
-        println!("{}", group);
-    }
+    //println!("Found {} groups matching {}", groups.len(), s);
+    //for group in groups.iter() {
+        //println!("{}", group);
+    //}
 
-    let mut types = courses;
-    types.push_all(groups[]);
+    //let mut types = courses;
+    //types.push_all(groups[]);
 
-    let entries = schedule(types, from, to);
+    //let mut types = Vec::new();
+    //types.push(Type {
+        //id: "TATA31".to_string(),
+        //name: "".to_string(),
+        //data_id: "363733.219".to_string()
+    //});
+    //types.push(Type {
+        //id: "TATA49".to_string(),
+        //name: "".to_string(),
+        //data_id: "363741.219".to_string()
+    //});
+    // !! Cannot mix courses and groups, it will not return anything then!!
+    //types.push(Type {
+        //id: "FYN1".to_string(),
+        //name: "".to_string(),
+        //data_id: "153398.205".to_string()
+    //});
 
-    println!("Found {} entries", entries.len());
-    for entry in entries.iter() {
-        println!("{}", entry);
-    }
+    //let entries = schedule(types, from, to);
+
+    //println!("Found {} entries", entries.len());
+    //for entry in entries.iter() {
+        //println!("{}", entry);
+    //}
 
     panic!("===o,o===");
 }

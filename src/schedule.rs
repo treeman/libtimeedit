@@ -12,7 +12,7 @@ pub fn schedule(courses: Vec<Type>, from: Tm, to: Tm) -> Vec<Entry> {
     let mut objects = String::new();
     for course in courses.iter() {
         if !objects.is_empty() {
-            objects.push('%');
+            objects.push_str("%2C");
         }
         objects.push_str(course.data_id[]);
     }
@@ -23,6 +23,7 @@ pub fn schedule(courses: Vec<Type>, from: Tm, to: Tm) -> Vec<Entry> {
                 time::strftime(date_format, &from).unwrap(),
                 time::strftime(date_format, &to).unwrap(),
                 objects);
+    println!("Requesting url: {}", url);
     let txt = request(url[]);
 
     let lines = parse::split(txt[], '\n');
@@ -32,6 +33,9 @@ pub fn schedule(courses: Vec<Type>, from: Tm, to: Tm) -> Vec<Entry> {
 
     let mut res = Vec::new();
     for entry in entries.iter() {
+        //println!("{}", entry);
+
+        // FIXME name can be "<course1, course2>" as well!
         let split = parse::split(*entry, ',');
         let (startdate, starttime, enddate, endtime) = (split[0], split[1], split[2], split[3]);
         let (name, loc) = (split[4], split[5]);
@@ -55,3 +59,4 @@ pub fn schedule(courses: Vec<Type>, from: Tm, to: Tm) -> Vec<Entry> {
 
     res
 }
+

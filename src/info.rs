@@ -2,6 +2,7 @@ use std::fmt::{Show, Formatter, FormatError};
 use time;
 use time::Tm;
 
+// TODO signify if it's a Course or a Group somehow
 // TODO name?
 #[deriving(Show, Clone)]
 pub struct Type {
