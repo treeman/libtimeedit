@@ -94,3 +94,8 @@ https://se.timeedit.net/web/liu/db1/schema/ri.html?sid=4&p=140703-141231&objects
 https://se.timeedit.net/web/liu/db1/schema/ri.txt?sid=3&p=140703-141231&sort=1&objects=363741.219
 https://se.timeedit.net/web/liu/db1/schema/ri.ics?sid=3&p=140703-141231&sort=1&objects=363741.219
 https://se.timeedit.net/web/liu/db1/schema/ri.csv?sid=3&p=140703-141231&sort=1&objects=363741.219
+
+Search types:
+219     Course
+205     Group
+
