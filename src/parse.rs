@@ -104,7 +104,7 @@ pub fn schedule_res(txt: &str) -> Vec<Event> {
     let lines = split(txt[], '\n');
 
     // Header is first 3 lines, skip them.
-    let entries = lines.slice_from(3);
+    let events = lines.slice_from(3);
 
     // Easy empty default.
     fn ind<'a>(split: &Vec<&'a str>, pos: uint) -> &'a str {
@@ -115,8 +115,8 @@ pub fn schedule_res(txt: &str) -> Vec<Event> {
     }
 
     let mut res = Vec::new();
-    for entry in entries.iter() {
-        let xs = string_lit_comma_split(*entry);
+    for event in events.iter() {
+        let xs = string_lit_comma_split(*event);
 
         let (startdate, starttime, enddate, endtime) = (xs[0], xs[1], xs[2], xs[3]);
         let (name, loc) = (ind(&xs, 4), ind(&xs, 5));
