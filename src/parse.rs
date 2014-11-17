@@ -34,15 +34,11 @@ pub fn string_lit_comma_split(s: &str) -> Vec<&str> {
     let mut splits = Vec::new();
 
     let bytes = s.as_bytes();
-    println!("Splitting: {}", s);
-    println!("utf8 len: {}", bytes.len());
     while at < bytes.len() {
         let byte = bytes[at];
-        println!("We're at position {} with byte `{}`", at, byte);
         match mode {
             Comma => {
                 if byte == comma {
-                    println!("Found , at {}", at);
                     splits.push(bytes[from..at]);
                     from = at + 1;
                 } else if byte == strlit { // "
@@ -61,17 +57,13 @@ pub fn string_lit_comma_split(s: &str) -> Vec<&str> {
         at += 1;
     }
     splits.push(bytes[from..]);
-    let splits: Vec<&str> = splits.iter().map(|bs| {
+    splits.iter().map(|bs| {
         str::from_utf8(*bs).unwrap()
     }).map(|s| {
         s.trim()
     }).filter(|s: &&str| -> bool {
         *s != ""
-    }).collect();
-    for x in splits.iter() {
-        println!("`{}`", x);
-    }
-    splits
+    }).collect()
 }
 
 pub fn search_res(txt: &str, t: Type) -> Vec<TypeInfo> {
@@ -114,13 +106,21 @@ pub fn schedule_res(txt: &str) -> Vec<Entry> {
     // Header is first 3 lines, skip them.
     let entries = lines.slice_from(3);
 
+    // Easy empty default.
+    fn ind<'a>(split: &Vec<&'a str>, pos: uint) -> &'a str {
+        match split[].get(pos) {
+            Some(x) => *x,
+            None => "",
+        }
+    }
+
     let mut res = Vec::new();
     for entry in entries.iter() {
-        let split = string_lit_comma_split(*entry);
-        println!("{}", split);
+        let xs = string_lit_comma_split(*entry);
 
-        let (startdate, starttime, enddate, endtime) = (split[0], split[1], split[2], split[3]);
-        let (name, loc) = (split[4], split[5]);
+        let (startdate, starttime, enddate, endtime) = (xs[0], xs[1], xs[2], xs[3]);
+        let (name, loc) = (ind(&xs, 4), ind(&xs, 5));
+        let (activity, who, groups) = (ind(&xs, 6), ind(&xs, 7), ind(&xs, 8));
 
         let start = match time::strptime(format!("{} {}", startdate, starttime)[], "%F %R") {
             Ok(x) => x,
@@ -135,7 +135,10 @@ pub fn schedule_res(txt: &str) -> Vec<Entry> {
             start: start,
             end: end,
             name: name.to_string(),
-            loc: loc.to_string()
+            loc: loc.to_string(),
+            activity: activity.to_string(),
+            who: who.to_string(),
+            groups: split(groups, ',').iter().map(|x| x.to_string()).collect(),
         });
     }
 

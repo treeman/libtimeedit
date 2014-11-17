@@ -95,19 +95,21 @@ pub struct Entry {
     pub start: Tm,
     pub end: Tm,
     pub name: String,
-    pub loc: String, // Vec<String>
-    // what: String/Struct
-    // who: String
-    // groups: Vec<String>
+    pub loc: String,
+    pub activity: String,
+    pub who: String,
+    pub groups: Vec<String>
 }
 
 impl Show for Entry {
     fn fmt(&self, f: &mut Formatter) -> Result<(), FormatError> {
         let date_format = "%F %R";
-        write!(f, "{} - {} {}",
+        write!(f, "{} - {} {} {} {}",
             time::strftime(date_format, &self.start).unwrap(),
             time::strftime(date_format, &self.end).unwrap(),
-            self.name
+            self.name,
+            self.activity,
+            self.loc
         )
     }
 }
