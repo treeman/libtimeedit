@@ -1,7 +1,8 @@
 use time;
 use std::str;
 
-use info::{ Type, TypeInfo, Course, Group, Event, DataId };
+use typeinfo::{ Type, TypeInfo, Course, Group, DataId };
+use event::Event;
 
 // TODO move somewhere?
 // Split a string on a character, trim and remove empty strings.

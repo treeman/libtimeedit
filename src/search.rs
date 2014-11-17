@@ -1,6 +1,6 @@
 use request::request;
 use parse;
-use info::{ Type, TypeInfo, Course, Group };
+use typeinfo::{ Type, TypeInfo, Course, Group };
 
 /// Search for a match.
 ///

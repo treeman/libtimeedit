@@ -4,7 +4,8 @@ use std::collections::TreeMap;
 
 use request::request;
 use parse;
-use info::{ TypeInfo, Event, DataId, Type };
+use typeinfo::{ TypeInfo, DataId, Type };
+use event::{ Event };
 
 pub fn schedule(infos: Vec<TypeInfo>, from: Tm, to: Tm, base: &str) -> Vec<Event> {
     if infos.is_empty() {

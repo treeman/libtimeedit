@@ -12,12 +12,13 @@ extern crate regex_macros;
 extern crate regex;
 
 pub use search::{ search, course_search, group_search };
-pub use info::{ DataId, TypeInfo, Event, Course, Group, Type };
+pub use typeinfo::{ DataId, TypeInfo, Course, Group, Type };
+pub use event::{ Event };
 pub use schedule::{ schedule, schedule_from_ids };
 
-pub mod parse;
-pub mod info;
-pub mod search;
-pub mod schedule;
-
+mod parse;
+mod search;
+mod schedule;
+mod typeinfo;
+mod event;
 mod request;
