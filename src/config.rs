@@ -32,3 +32,19 @@ impl Config {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::Config;
+
+    #[test]
+    fn load_test() {
+        let _conf = Config::from_file("config_ex.json".to_string());
+    }
+
+    #[test]
+    #[should_fail]
+    fn load_test_fail() {
+        let _conf = Config::from_file("missing.json".to_string());
+    }
+}
+

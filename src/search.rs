@@ -45,17 +45,16 @@ mod tests {
     use time;
     use std::time::Duration;
     use schedule::schedule;
-    use info::{ Course, Group };
+    use info::{ Course, Group, TypeInfo, DataId };
     use config::Config;
 
     #[test]
     fn test_search() {
         let from = time::now();
         let to = time::at(from.to_timespec() + Duration::weeks(1));
+        let conf = Config::from_file("config_ex.json".to_string());
 
-        let s = "TATA49";
-
-        let conf = Config::from_file("config.json".to_string());
+        let s = "FYN1";
 
         let (types, typ) = search(s, &conf);
         let ts = match typ {
@@ -67,26 +66,10 @@ mod tests {
             println!("{}", t);
         }
 
-        //let mut types = courses;
-        //types.push_all(groups[]);
-
-        //let mut types = Vec::new();
-        //types.push(Type {
-            //id: "TATA31".to_string(),
-            //name: "".to_string(),
-            //data_id: "363733.219".to_string()
-        //});
-        //types.push(Type {
-            //id: "TATA49".to_string(),
-            //name: "".to_string(),
-            //data_id: "363741.219".to_string()
-        //});
-        // !! Cannot mix courses and groups, it will not return anything then!!
-        //types.push(Type {
-            //id: "FYN1".to_string(),
-            //name: "".to_string(),
-            //data_id: "153398.205".to_string()
-        //});
+        let mut types = Vec::new();
+        //types.push(TypeInfo::new("TATA31", "", DataId::new("363733.219")));
+        types.push(TypeInfo::new("TATA49", "", DataId::new("363741.219")));
+        types.push(TypeInfo::new("FYN1", "", DataId::new("153398.205")));
 
         let entries = schedule(types, from, to, &conf);
 

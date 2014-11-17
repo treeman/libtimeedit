@@ -2,7 +2,7 @@ use std::fmt::{Show, Formatter, FormatError};
 use time;
 use time::Tm;
 
-#[deriving(Show, Clone, Eq, PartialEq)]
+#[deriving(Show, Clone, Eq, PartialEq, Ord, PartialOrd)]
 pub enum Type {
     Course,
     Group,
@@ -37,7 +37,6 @@ pub struct DataId {
 
 impl DataId {
     pub fn new(s: &str) -> DataId {
-        let p = s.find('.').unwrap();
         let re = regex!(r"(\d+)\.(\d+)");
         let caps = match re.captures(s) {
             Some(x) => x,
@@ -77,6 +76,7 @@ impl TypeInfo {
     }
 }
 
+#[deriving(Clone)]
 pub struct Entry {
     pub start: Tm,
     pub end: Tm,
@@ -97,7 +97,7 @@ impl Show for Entry {
 
 #[cfg(test)]
 mod tests {
-    use super::{ DataId, TypeInfo, Group, Course, Type };
+    use super::{ DataId, TypeInfo, Type };
 
     #[test]
     fn test_typeinfo() {
