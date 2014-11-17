@@ -1,7 +1,7 @@
 use time;
 use std::str;
 
-use info::{ Type, TypeInfo, Course, Group, Entry, DataId };
+use info::{ Type, TypeInfo, Course, Group, Event, DataId };
 
 // TODO move somewhere?
 // Split a string on a character, trim and remove empty strings.
@@ -100,7 +100,7 @@ pub fn search_res(txt: &str, t: Type) -> Vec<TypeInfo> {
     types
 }
 
-pub fn schedule_res(txt: &str) -> Vec<Entry> {
+pub fn schedule_res(txt: &str) -> Vec<Event> {
     let lines = split(txt[], '\n');
 
     // Header is first 3 lines, skip them.
@@ -131,7 +131,7 @@ pub fn schedule_res(txt: &str) -> Vec<Entry> {
             Err(e) => panic!(e)
         };
 
-        res.push(Entry {
+        res.push(Event {
             start: start,
             end: end,
             name: name.to_string(),

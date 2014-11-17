@@ -4,9 +4,9 @@ use std::collections::TreeMap;
 
 use request::request;
 use parse;
-use info::{ TypeInfo, Entry, DataId, Type };
+use info::{ TypeInfo, Event, DataId, Type };
 
-pub fn schedule(infos: Vec<TypeInfo>, from: Tm, to: Tm, base: &str) -> Vec<Entry> {
+pub fn schedule(infos: Vec<TypeInfo>, from: Tm, to: Tm, base: &str) -> Vec<Event> {
     if infos.is_empty() {
         return Vec::new();
     }
@@ -15,7 +15,7 @@ pub fn schedule(infos: Vec<TypeInfo>, from: Tm, to: Tm, base: &str) -> Vec<Entry
     schedule_from_ids(ids, from, to, base)
 }
 
-pub fn schedule_from_ids(ids: Vec<DataId>, from: Tm, to: Tm, base: &str) -> Vec<Entry> {
+pub fn schedule_from_ids(ids: Vec<DataId>, from: Tm, to: Tm, base: &str) -> Vec<Event> {
     if ids.is_empty() {
         return Vec::new();
     }
@@ -43,7 +43,7 @@ pub fn schedule_from_ids(ids: Vec<DataId>, from: Tm, to: Tm, base: &str) -> Vec<
 /// All id types are the same.
 ///
 /// Will make a single request.
-fn schedule_from_single_ids(ids: Vec<DataId>, from: Tm, to: Tm, base: &str) -> Vec<Entry> {
+fn schedule_from_single_ids(ids: Vec<DataId>, from: Tm, to: Tm, base: &str) -> Vec<Event> {
     if ids.is_empty() {
         return Vec::new();
     }

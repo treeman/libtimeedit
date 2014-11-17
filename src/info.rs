@@ -91,7 +91,7 @@ impl Show for TypeInfo {
 }
 
 #[deriving(Clone, Eq, PartialEq)]
-pub struct Entry {
+pub struct Event {
     pub start: Tm,
     pub end: Tm,
     pub name: String,
@@ -101,7 +101,7 @@ pub struct Entry {
     pub groups: Vec<String>
 }
 
-impl Show for Entry {
+impl Show for Event {
     fn fmt(&self, f: &mut Formatter) -> Result<(), FormatError> {
         let date_format = "%F %R";
         write!(f, "{} - {} {} {} {}",
@@ -114,14 +114,14 @@ impl Show for Entry {
     }
 }
 
-impl Ord for Entry {
-    fn cmp(&self, other: &Entry) -> Ordering {
+impl Ord for Event {
+    fn cmp(&self, other: &Event) -> Ordering {
         self.start.to_timespec().cmp(&other.start.to_timespec())
     }
 }
 
-impl PartialOrd for Entry {
-    fn partial_cmp(&self, other: &Entry) -> Option<Ordering> {
+impl PartialOrd for Event {
+    fn partial_cmp(&self, other: &Event) -> Option<Ordering> {
         Some(self.cmp(other))
     }
 }
