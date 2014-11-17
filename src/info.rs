@@ -1,4 +1,5 @@
-use std::fmt::{Show, Formatter, FormatError};
+use serialize::{ Decodable, Decoder };
+use std::fmt::{ Show, Formatter, FormatError };
 use time;
 use time::Tm;
 
@@ -59,7 +60,14 @@ impl Show for DataId {
     }
 }
 
-#[deriving(Show, Clone, Eq, PartialEq)]
+impl<E, D:Decoder<E>> Decodable<D, E> for DataId {
+    fn decode(d: &mut D) -> Result<DataId, E> {
+        let s = try!(d.read_str());
+        Ok(DataId::new(s[]))
+    }
+}
+
+#[deriving(Clone, Eq, PartialEq)]
 pub struct TypeInfo {
     pub code: String,
     pub name: String,
@@ -76,12 +84,21 @@ impl TypeInfo {
     }
 }
 
+impl Show for TypeInfo {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), FormatError> {
+        write!(f, "{} \"{}\" id: {}", self.code, self.name, self.id)
+    }
+}
+
 #[deriving(Clone, Eq, PartialEq)]
 pub struct Entry {
     pub start: Tm,
     pub end: Tm,
     pub name: String,
-    pub loc: String,
+    pub loc: String, // Vec<String>
+    // what: String/Struct
+    // who: String
+    // groups: Vec<String>
 }
 
 impl Show for Entry {

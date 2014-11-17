@@ -1,4 +1,5 @@
 use time;
+use std::str;
 
 use info::{ Type, TypeInfo, Course, Group, Entry, DataId };
 
@@ -12,6 +13,65 @@ pub fn split<'a>(s: &'a str, c: char) -> Vec<&'a str> {
     }).filter(|s: &&str| -> bool {
         *s != ""
     }).collect()
+}
+
+/// Split at each comma, but ignore commas inside string literals.
+///
+/// Also prune empty splits and remove opening/trailing "
+pub fn string_lit_comma_split(s: &str) -> Vec<&str> {
+    enum Mode {
+        Comma,
+        StringLit,
+    }
+
+    // utf8 byte code for , and "
+    let comma = 44;
+    let strlit = 34;
+
+    let mut at = 0;
+    let mut from = 0;
+    let mut mode = Comma;
+    let mut splits = Vec::new();
+
+    let bytes = s.as_bytes();
+    println!("Splitting: {}", s);
+    println!("utf8 len: {}", bytes.len());
+    while at < bytes.len() {
+        let byte = bytes[at];
+        println!("We're at position {} with byte `{}`", at, byte);
+        match mode {
+            Comma => {
+                if byte == comma {
+                    println!("Found , at {}", at);
+                    splits.push(bytes[from..at]);
+                    from = at + 1;
+                } else if byte == strlit { // "
+                    from = at + 1;
+                    mode = StringLit;
+                }
+            },
+            StringLit => {
+                if byte == strlit && at != from {
+                    splits.push(bytes[from..at]);
+                    from = at + 1;
+                    mode = Comma;
+                }
+            }
+        }
+        at += 1;
+    }
+    splits.push(bytes[from..]);
+    let splits: Vec<&str> = splits.iter().map(|bs| {
+        str::from_utf8(*bs).unwrap()
+    }).map(|s| {
+        s.trim()
+    }).filter(|s: &&str| -> bool {
+        *s != ""
+    }).collect();
+    for x in splits.iter() {
+        println!("`{}`", x);
+    }
+    splits
 }
 
 pub fn search_res(txt: &str, t: Type) -> Vec<TypeInfo> {
@@ -56,10 +116,9 @@ pub fn schedule_res(txt: &str) -> Vec<Entry> {
 
     let mut res = Vec::new();
     for entry in entries.iter() {
-        //println!("{}", entry);
+        let split = string_lit_comma_split(*entry);
+        println!("{}", split);
 
-        // FIXME name can be "<course1, course2>" as well!
-        let split = split(*entry, ',');
         let (startdate, starttime, enddate, endtime) = (split[0], split[1], split[2], split[3]);
         let (name, loc) = (split[4], split[5]);
 
@@ -81,5 +140,22 @@ pub fn schedule_res(txt: &str) -> Vec<Entry> {
     }
 
     res
+}
+
+#[cfg(test)]
+mod tests {
+    use super::string_lit_comma_split;
+
+    #[test]
+    fn string_lit() {
+        assert_eq!(string_lit_comma_split(r#"a, b, c, "d, e", f"#),
+                                          vec!["a", "b", "c", "d, e", "f"]);
+    }
+
+    #[test]
+    fn string_lit_utf8() {
+        assert_eq!(string_lit_comma_split(r#"å, ä, ö"#),
+            vec!["å", "ä", "ö"]);
+    }
 }
 

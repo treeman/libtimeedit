@@ -11,7 +11,6 @@ extern crate serialize;
 extern crate regex_macros;
 extern crate regex;
 
-pub use config::{ Config };
 pub use search::{ search, course_search, group_search };
 pub use info::{ DataId, TypeInfo, Entry, Course, Group, Type };
 pub use schedule::{ schedule, schedule_from_ids };
@@ -20,6 +19,5 @@ pub mod parse;
 pub mod info;
 pub mod search;
 pub mod schedule;
-pub mod config;
 
 mod request;

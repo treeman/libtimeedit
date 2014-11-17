@@ -5,18 +5,17 @@ use std::collections::TreeMap;
 use request::request;
 use parse;
 use info::{ TypeInfo, Entry, DataId, Type };
-use config::Config;
 
-pub fn schedule(infos: Vec<TypeInfo>, from: Tm, to: Tm, conf: &Config) -> Vec<Entry> {
+pub fn schedule(infos: Vec<TypeInfo>, from: Tm, to: Tm, base: &str) -> Vec<Entry> {
     if infos.is_empty() {
         return Vec::new();
     }
 
     let ids = infos.iter().map(|x| x.id).collect();
-    schedule_from_ids(ids, from, to, conf)
+    schedule_from_ids(ids, from, to, base)
 }
 
-pub fn schedule_from_ids(ids: Vec<DataId>, from: Tm, to: Tm, conf: &Config) -> Vec<Entry> {
+pub fn schedule_from_ids(ids: Vec<DataId>, from: Tm, to: Tm, base: &str) -> Vec<Entry> {
     if ids.is_empty() {
         return Vec::new();
     }
@@ -35,7 +34,7 @@ pub fn schedule_from_ids(ids: Vec<DataId>, from: Tm, to: Tm, conf: &Config) -> V
     // Merge results of separate requests.
     let mut res = Vec::new();
     for p in partition.values() {
-        res.push_all(schedule_from_single_ids(p.clone(), from, to, conf)[]);
+        res.push_all(schedule_from_single_ids(p.clone(), from, to, base)[]);
     }
     res.sort();
     res
@@ -44,7 +43,7 @@ pub fn schedule_from_ids(ids: Vec<DataId>, from: Tm, to: Tm, conf: &Config) -> V
 /// All id types are the same.
 ///
 /// Will make a single request.
-fn schedule_from_single_ids(ids: Vec<DataId>, from: Tm, to: Tm, conf: &Config) -> Vec<Entry> {
+fn schedule_from_single_ids(ids: Vec<DataId>, from: Tm, to: Tm, base: &str) -> Vec<Entry> {
     if ids.is_empty() {
         return Vec::new();
     }
@@ -58,7 +57,7 @@ fn schedule_from_single_ids(ids: Vec<DataId>, from: Tm, to: Tm, conf: &Config) -
     }
     let date_format = "%y%m%d";
     let url = format!("{}/ri.csv?sid=3&p={}-{}&objects={}",
-                conf.base,
+                base,
                 time::strftime(date_format, &from).unwrap(),
                 time::strftime(date_format, &to).unwrap(),
                 objects);
