@@ -13,16 +13,48 @@ pub struct Event {
     pub groups: Vec<String>
 }
 
-impl Show for Event {
-    fn fmt(&self, f: &mut Formatter) -> Result<(), FormatError> {
-        let date_format = "%F %R";
-        write!(f, "{} - {} {} {} {}",
-            time::strftime(date_format, &self.start).unwrap(),
-            time::strftime(date_format, &self.end).unwrap(),
+impl Event {
+    /// Print time of start and end only.
+    pub fn fmt_span_time(&self) -> String {
+        self.fmt_span("%R")
+    }
+
+    /// Full year-month-day hour:min format.
+    pub fn fmt_span_full(&self) -> String {
+        self.fmt_span("%F %R")
+    }
+
+    /// Format start - end with a given datetime format string.
+    pub fn fmt_span(&self, format_str: &str) -> String {
+        format!("{} - {}",
+            time::strftime(format_str, &self.start).unwrap(),
+            time::strftime(format_str, &self.end).unwrap(),
+        )
+    }
+
+    /// Don't print date.
+    pub fn fmt_time_only(&self) -> String {
+        format!("{} {} {} {}",
+            self.fmt_span_time(),
             self.name,
             self.activity,
             self.loc
         )
+    }
+
+    pub fn fmt_full(&self) -> String {
+        format!("{} {} {} {}",
+            self.fmt_span_full(),
+            self.name,
+            self.activity,
+            self.loc
+        )
+    }
+}
+
+impl Show for Event {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), FormatError> {
+        write!(f, "{}", self.fmt_full())
     }
 }
 
