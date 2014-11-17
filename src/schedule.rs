@@ -3,29 +3,31 @@ use time::Tm;
 
 use request::request;
 use parse;
-use info::{ Type, TypeInfo, Entry };
+use info::{ TypeInfo, Entry };
+use config::Config;
 
-pub fn schedule(courses: Vec<TypeInfo>, from: Tm, to: Tm) -> Vec<Entry> {
-    assert!(courses.len() > 0);
+pub fn schedule(infos: Vec<TypeInfo>, from: Tm, to: Tm, conf: &Config) -> Vec<Entry> {
+    assert!(infos.len() > 0);
 
-    let base = "https://se.timeedit.net/web/liu/db1/schema/ri.csv?sid=3";
     let mut objects = String::new();
-    for course in courses.iter() {
+    for info in infos.iter() {
         if !objects.is_empty() {
             objects.push_str("%2C");
         }
-        objects.push_str(course.data_id[]);
+        objects.push_str(info.id.to_string()[]);
     }
-    //println!("objects: {}", objects);
     let date_format = "%y%m%d";
-    let url = format!("{}&p={}-{}&objects={}",
-                base,
+    let url = format!("{}/ri.csv?sid=3&p={}-{}&objects={}",
+                conf.base,
                 time::strftime(date_format, &from).unwrap(),
                 time::strftime(date_format, &to).unwrap(),
                 objects);
-    println!("Requesting url: {}", url);
     let txt = request(url[]);
 
     parse::schedule_res(txt[])
 }
+
+//pub fn schedule_from_ids(ids: Vec<String>, from: Tm, to: Tm, conf: &Config) -> Vec<Entry> {
+    // Sanity check, cannot mix different ids
+//}
 

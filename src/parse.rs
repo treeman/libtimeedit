@@ -1,6 +1,6 @@
 use time;
 
-use info::{ Type, TypeInfo, Course, Group, Entry };
+use info::{ Type, TypeInfo, Course, Group, Entry, DataId };
 
 // TODO move somewhere?
 // Split a string on a character, trim and remove empty strings.
@@ -40,7 +40,7 @@ pub fn search_res(txt: &str, t: Type) -> Vec<TypeInfo> {
 
         let re = regex!(r#"data-id="([^"]+)""#);
         let caps = re.captures(chunk).unwrap();
-        let data_id = caps.at(1);
+        let data_id = DataId::new(caps.at(1));
 
         types.push(TypeInfo::new(id, name, data_id));
     }

@@ -23,26 +23,56 @@ impl Type {
             _ => panic!("Unknown Type id {}", id),
         }
     }
+
+    pub fn from_str(id: &str) -> Type {
+        Type::from_id(from_str(id).unwrap())
+    }
+}
+
+#[deriving(Clone, Eq, PartialEq)]
+pub struct DataId {
+    pub id: uint,
+    pub typ: Type,
+}
+
+impl DataId {
+    pub fn new(s: &str) -> DataId {
+        let p = s.find('.').unwrap();
+        let re = regex!(r"(\d+)\.(\d+)");
+        let caps = match re.captures(s) {
+            Some(x) => x,
+            None => panic!("Cannot construct DataId from {}", s),
+        };
+        DataId {
+            id: from_str(caps.at(1)).unwrap(),
+            typ: Type::from_str(caps.at(2)),
+        }
+    }
+
+    pub fn to_str(&self) -> String {
+        format!("{}.{}", self.id, self.typ)
+    }
+}
+
+impl Show for DataId {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), FormatError> {
+        write!(f, "{}.{}", self.id, self.typ.num_id())
+    }
 }
 
 #[deriving(Show, Clone, Eq, PartialEq)]
 pub struct TypeInfo {
-    pub id: String,
+    pub code: String,
     pub name: String,
-    pub data_id: String,
-    pub typ: Type,
+    pub id: DataId,
 }
 
 impl TypeInfo {
-    pub fn new(id: &str, name: &str, data_id: &str) -> TypeInfo {
-        let p = data_id.find('.').unwrap();
-        let type_id = from_str(data_id.slice_from_or_fail(&(p + 1))).unwrap();
-
+    pub fn new(code: &str, name: &str, id: DataId) -> TypeInfo {
         TypeInfo {
-            id: id.to_string(),
+            code: code.to_string(),
             name: name.to_string(),
-            data_id: data_id.to_string(),
-            typ: Type::from_id(type_id),
+            id: id,
         }
     }
 }
@@ -65,22 +95,52 @@ impl Show for Entry {
     }
 }
 
-#[test]
-fn test_typeinfo() {
-    assert_eq!(TypeInfo::new("D3.a", "CIV ING UTB DATATEKNIK", "1513.205"),
-        TypeInfo {
-            id: "D3.a".to_string(),
-            name: "CIV ING UTB DATATEKNIK".to_string(),
-            data_id: "1513.205".to_string(),
-            typ: Group,
-        });
+#[cfg(test)]
+mod tests {
+    use super::{ DataId, TypeInfo, Group, Course, Type };
 
-    assert_eq!(TypeInfo::new("TATA49", "Geometri och tillämpning", "363741.219"),
-        TypeInfo {
-            id: "TATA49".to_string(),
-            name: "Geometri och tillämpning".to_string(),
-            data_id: "363741.219".to_string(),
-            typ: Course,
-        });
+    #[test]
+    fn test_typeinfo() {
+        assert_eq!(TypeInfo::new("D3.a", "CIV ING UTB DATATEKNIK",
+                                 DataId::new("1513.205")),
+            TypeInfo {
+                code: "D3.a".to_string(),
+                name: "CIV ING UTB DATATEKNIK".to_string(),
+                id: DataId::new("1513.205"),
+            });
+
+        assert_eq!(TypeInfo::new("TATA49", "Geometri och tillämpning",
+                                 DataId::new("363741.219")),
+            TypeInfo {
+                code: "TATA49".to_string(),
+                name: "Geometri och tillämpning".to_string(),
+                id: DataId::new("363741.219"),
+            });
+    }
+
+    #[test]
+    fn test_dataid() {
+        assert_eq!(DataId::new("1513.205"),
+            DataId {
+                id: 1513,
+                typ: Type::from_id(205),
+            }
+        );
+        assert_eq!(DataId::new("363741.219"),
+            DataId {
+                id: 363741,
+                typ: Type::from_id(219),
+            }
+        );
+
+        let x = format!("{}", DataId::new("1234.205"));
+        assert_eq!(x[], "1234.205");
+    }
+
+    #[test]
+    #[should_fail]
+    fn test_dataid_fail() {
+        let _x = DataId::new("12345");
+    }
 }
 
