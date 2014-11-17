@@ -27,12 +27,8 @@ pub fn group_search(string: &str, conf: &Config) -> Vec<TypeInfo> {
 }
 
 fn type_search(string: &str, t: Type, conf: &Config) -> Vec<TypeInfo> {
-    //println!("Searching for {}", course);
     // TODO use json when searching for things?
-    // https://se.timeedit.net/web/liu/db1/schema/objects.json?max=100&sid=3&search_text=TATA&types=219&fe=132.0&fe=115.20132,20141,20142
-    // instead
-    // fe is history or something?
-    let url = format!("{}/objects.html?max=100&partajax=t&im=f&sid=3&search_text={}&types={}",
+    let url = format!("{}/objects.html?max=100&partajax=t&sid=3&search_text={}&types={}",
                       conf.base, string, t.num_id());
     println!("Url: {}", url);
     let txt = request(url[]);
