@@ -32,7 +32,9 @@ fn type_search(string: &str, t: Type, conf: &Config) -> Vec<TypeInfo> {
     // https://se.timeedit.net/web/liu/db1/schema/objects.json?max=100&sid=3&search_text=TATA&types=219&fe=132.0&fe=115.20132,20141,20142
     // instead
     // fe is history or something?
-    let url = format!("{}/objects.html?max=100&partajax=t&im=f&sid=3&l=sv&search_text={}&types={}", conf.base, string, t.num_id());
+    let url = format!("{}/objects.html?max=100&partajax=t&im=f&sid=3&search_text={}&types={}",
+                      conf.base, string, t.num_id());
+    println!("Url: {}", url);
     let txt = request(url[]);
 
     parse::search_res(txt[], t)
@@ -54,7 +56,7 @@ mod tests {
         let to = time::at(from.to_timespec() + Duration::weeks(1));
         let conf = Config::from_file("config_ex.json".to_string());
 
-        let s = "FYN1";
+        let s = "TATA";
 
         let (types, typ) = search(s, &conf);
         let ts = match typ {

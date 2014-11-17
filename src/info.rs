@@ -76,7 +76,7 @@ impl TypeInfo {
     }
 }
 
-#[deriving(Clone)]
+#[deriving(Clone, Eq, PartialEq)]
 pub struct Entry {
     pub start: Tm,
     pub end: Tm,
@@ -92,6 +92,18 @@ impl Show for Entry {
             time::strftime(date_format, &self.end).unwrap(),
             self.name
         )
+    }
+}
+
+impl Ord for Entry {
+    fn cmp(&self, other: &Entry) -> Ordering {
+        self.start.to_timespec().cmp(&other.start.to_timespec())
+    }
+}
+
+impl PartialOrd for Entry {
+    fn partial_cmp(&self, other: &Entry) -> Option<Ordering> {
+        Some(self.cmp(other))
     }
 }
 

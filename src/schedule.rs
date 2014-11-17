@@ -37,6 +37,7 @@ pub fn schedule_from_ids(ids: Vec<DataId>, from: Tm, to: Tm, conf: &Config) -> V
     for p in partition.values() {
         res.push_all(schedule_from_single_ids(p.clone(), from, to, conf)[]);
     }
+    res.sort();
     res
 }
 
