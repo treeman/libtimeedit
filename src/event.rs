@@ -146,7 +146,7 @@ impl PartialOrd for Event {
 pub fn filter_upcoming(events: Vec<Event>) -> Vec<Event> {
     let now = time::get_time();
     events.into_iter().skip_while(|x| {
-        x.start.to_timespec() < now
+        x.end.to_timespec() < now
     }).collect()
 }
 
@@ -189,7 +189,7 @@ mod tests {
     use std::time::Duration;
 
     fn simple_event(start: Tm, id: &str) -> Event {
-        let end = time::at(start.to_timespec() + Duration::hours(1));
+        let end = time::at(start.to_timespec() + Duration::minutes(30));
         Event {
             start: start,
             end: end,
@@ -219,9 +219,12 @@ mod tests {
 
         let events = vec![_1h.clone(), now.clone(), p1h.clone(), p1d.clone(), p1w.clone()];
 
-        assert_eq!(filter_upcoming(events.clone()), vec![p1h.clone(), p1d.clone(), p1w.clone()]);
-        assert_eq!(filter_today(events.clone()), vec![_1h.clone(), now.clone(), p1h.clone()]);
-        assert_eq!(filter_tomorrow(events.clone()), vec![p1d.clone()]);
+        assert_eq!(filter_upcoming(events.clone()),
+            vec![now.clone(), p1h.clone(), p1d.clone(), p1w.clone()]);
+        assert_eq!(filter_today(events.clone()),
+            vec![_1h.clone(), now.clone(), p1h.clone()]);
+        assert_eq!(filter_tomorrow(events.clone()),
+            vec![p1d.clone()]);
     }
 
     fn matches(got: String, re: Regex) {
