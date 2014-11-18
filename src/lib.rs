@@ -13,7 +13,7 @@ extern crate regex;
 
 pub use search::{ multi_search, search, course_search, group_search };
 pub use typeinfo::{ DataId, TypeInfo, Type };
-pub use event::{ Event };
+pub use event::{ Event, filter_upcoming, filter_today, filter_tomorrow };
 pub use schedule::{ schedule, schedule_from_ids };
 pub use parse::{ string_lit_comma_split };
 
