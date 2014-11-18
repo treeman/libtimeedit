@@ -11,10 +11,11 @@ extern crate serialize;
 extern crate regex_macros;
 extern crate regex;
 
-pub use search::{ search, course_search, group_search };
-pub use typeinfo::{ DataId, TypeInfo, Course, Group, Type };
+pub use search::{ multi_search, search, course_search, group_search };
+pub use typeinfo::{ DataId, TypeInfo, Type };
 pub use event::{ Event };
 pub use schedule::{ schedule, schedule_from_ids };
+pub use parse::{ string_lit_comma_split };
 
 mod parse;
 mod search;

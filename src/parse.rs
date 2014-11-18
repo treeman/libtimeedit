@@ -1,7 +1,7 @@
 use time;
 use std::str;
 
-use typeinfo::{ Type, TypeInfo, Course, Group, DataId };
+use typeinfo::{ Type, TypeInfo, DataId };
 use event::Event;
 
 // TODO move somewhere?
@@ -31,27 +31,27 @@ pub fn string_lit_comma_split(s: &str) -> Vec<&str> {
 
     let mut at = 0;
     let mut from = 0;
-    let mut mode = Comma;
+    let mut mode = Mode::Comma;
     let mut splits = Vec::new();
 
     let bytes = s.as_bytes();
     while at < bytes.len() {
         let byte = bytes[at];
         match mode {
-            Comma => {
+            Mode::Comma => {
                 if byte == comma {
                     splits.push(bytes[from..at]);
                     from = at + 1;
                 } else if byte == strlit { // "
                     from = at + 1;
-                    mode = StringLit;
+                    mode = Mode::StringLit;
                 }
             },
-            StringLit => {
+            Mode::StringLit => {
                 if byte == strlit && at != from {
                     splits.push(bytes[from..at]);
                     from = at + 1;
-                    mode = Comma;
+                    mode = Mode::Comma;
                 }
             }
         }
@@ -87,8 +87,8 @@ pub fn search_res(txt: &str, t: Type) -> Vec<TypeInfo> {
         // But if it's a group it's <group description>, <group id>
         let slice = split(info, ',');
         let (id, name) = match t {
-            Course => (slice[0], slice[1]),
-            Group => (slice[1], slice[0]),
+            Type::Course => (slice[0], slice[1]),
+            Type::Group => (slice[1], slice[0]),
         };
 
         let re = regex!(r#"data-id="([^"]+)""#);

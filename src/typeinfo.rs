@@ -10,15 +10,15 @@ pub enum Type {
 impl Type {
     pub fn num_id(&self) -> uint {
         match *self {
-            Course => 219,
-            Group => 205,
+            Type::Course => 219,
+            Type::Group => 205,
         }
     }
 
     pub fn from_id(id: uint) -> Type {
         match id {
-            219 => Course,
-            205 => Group,
+            219 => Type::Course,
+            205 => Type::Group,
             _ => panic!("Unknown Type id {}", id),
         }
     }
