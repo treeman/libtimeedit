@@ -1,4 +1,4 @@
-use std::fmt::{ Show, Formatter, FormatError };
+use std::fmt::{ Show, Formatter, Error };
 use time;
 use time::Tm;
 use std::time::Duration;
@@ -126,7 +126,7 @@ impl Event {
 }
 
 impl Show for Event {
-    fn fmt(&self, f: &mut Formatter) -> Result<(), FormatError> {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         write!(f, "{}", self.fmt_full())
     }
 }

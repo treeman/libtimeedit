@@ -1,5 +1,5 @@
 use serialize::{ Decodable, Decoder };
-use std::fmt::{ Show, Formatter, FormatError };
+use std::fmt::{ Show, Formatter, Error };
 
 #[deriving(Show, Clone, Eq, PartialEq, Ord, PartialOrd)]
 pub enum Type {
@@ -53,7 +53,7 @@ impl DataId {
 }
 
 impl Show for DataId {
-    fn fmt(&self, f: &mut Formatter) -> Result<(), FormatError> {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         write!(f, "{}.{}", self.id, self.typ.num_id())
     }
 }
@@ -83,7 +83,7 @@ impl TypeInfo {
 }
 
 impl Show for TypeInfo {
-    fn fmt(&self, f: &mut Formatter) -> Result<(), FormatError> {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         write!(f, "{} \"{}\" id: {}", self.code, self.name, self.id)
     }
 }
